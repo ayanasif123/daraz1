@@ -1,5 +1,16 @@
 import 'package:flutter/material.dart';
-import 'package:grid/daraz.dart';
+import 'package:grid/home/daraz.dart';
+
+// ================== COLORS ==================
+const Color kPrimary = Color(0xFF1A1A1A);
+const Color kPink = Color(0xFF9E9E9E);
+const Color kPinkLight = Color(0xFFF5F5F5);
+
+const LinearGradient kPinkPurpleGradient = LinearGradient(
+  colors: [Color(0xFF1A1A1A), Color(0xFF424242)],
+  begin: Alignment.topLeft,
+  end: Alignment.bottomRight,
+);
 
 class Login extends StatefulWidget {
   const Login({super.key});
@@ -9,127 +20,204 @@ class Login extends StatefulWidget {
 }
 
 class _LoginState extends State<Login> {
-
   final emailController = TextEditingController();
   final passController = TextEditingController();
 
   bool obscure = true;
 
-  void login(){
-
-    if(emailController.text.isEmpty ||
-        passController.text.isEmpty){
-      return;
-    }
+  void login() {
+    if (emailController.text.isEmpty || passController.text.isEmpty) return;
 
     Navigator.pushAndRemoveUntil(
-        context,
-        MaterialPageRoute(builder: (_) => const DarazHome()),
-            (route) => false);
+      context,
+      MaterialPageRoute(builder: (_) => const DarazHome()),
+      (route) => false,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-
-      // ⭐ Gradient Background
       body: Container(
         width: double.infinity,
         height: double.infinity,
         decoration: const BoxDecoration(
-            gradient: LinearGradient(
-                colors: [
-                  Color.fromARGB(255, 31, 61, 196),
-                  Colors.white
-                ],
-                begin: Alignment.topCenter,
-                end: Alignment.bottomCenter
-            )
+          gradient: LinearGradient(
+            colors: [Color(0xFF1A1A1A), Color(0xFF424242), Colors.white],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
         ),
+        child: SafeArea(
+          child: Center(
+            child: SingleChildScrollView(
+              padding: const EdgeInsets.symmetric(horizontal: 28, vertical: 20),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
 
-        child: Padding(
-          padding: const EdgeInsets.all(20),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-
-              const Text(
-                "Login",
-                style: TextStyle(
-                    fontSize: 35,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.white
-                ),
-              ),
-
-              const SizedBox(height: 40),
-
-              // ⭐ Email Field
-              TextField(
-                controller: emailController,
-                decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: "Email",
-                    prefixIcon: const Icon(Icons.email, color: Color.fromARGB(255, 22, 19, 14)),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)
-                    )
-                ),
-              ),
-
-              const SizedBox(height: 20),
-
-              // ⭐ Password Field
-              TextField(
-                controller: passController,
-                obscureText: obscure,
-                decoration: InputDecoration(
-                    filled: true,
-                    fillColor: Colors.white,
-                    hintText: "Password",
-                    prefixIcon: const Icon(Icons.lock, color: Color.fromARGB(255, 12, 10, 7)),
-                    suffixIcon: IconButton(
-                        icon: Icon(
-                            obscure ? Icons.visibility_off : Icons.visibility
-                        ),
-                        onPressed: (){
-                          setState(() {
-                            obscure = !obscure;
-                          });
-                        }),
-                    border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(12)
-                    )
-                ),
-              ),
-
-              const SizedBox(height: 40),
-
-              // ⭐ Login Button
-              SizedBox(
-                width: double.infinity,
-                height: 55,
-                child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.white,
-                        foregroundColor: const Color.fromARGB(255, 75, 86, 192),
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(15)
-                        )
+                  // ================= LOGO ICON =================
+                  Container(
+                    padding: const EdgeInsets.all(18),
+                    decoration: BoxDecoration(
+                      color: Colors.white.withOpacity(0.15),
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                          color: Colors.white.withOpacity(0.4), width: 2),
                     ),
-                    onPressed: login,
-                    child: const Text(
-                        "Login",
-                        style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold
-                        )
-                    )
-                ),
-              )
+                    child: const Icon(Icons.storefront,
+                        size: 52, color: Colors.white),
+                  ),
 
-            ],
+                  const SizedBox(height: 20),
+
+                  // ================= TITLE =================
+                  const Text(
+                    "Daraz Store",
+                    style: TextStyle(
+                      fontSize: 30,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.white,
+                      letterSpacing: 1.2,
+                    ),
+                  ),
+
+                  const SizedBox(height: 6),
+
+                  Text(
+                    "Welcome back! Please login",
+                    style: TextStyle(
+                      fontSize: 14,
+                      color: Colors.white.withOpacity(0.75),
+                    ),
+                  ),
+
+                  const SizedBox(height: 40),
+
+                  // ================= CARD =================
+                  Container(
+                    padding: const EdgeInsets.all(24),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(24),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.15),
+                          blurRadius: 20,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      children: [
+
+                        // ================= EMAIL FIELD =================
+                        TextField(
+                          controller: emailController,
+                          keyboardType: TextInputType.emailAddress,
+                          cursorColor: kPrimary,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: kPinkLight,
+                            hintText: "Email",
+                            prefixIcon:
+                                const Icon(Icons.email, color: kPrimary),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide:
+                                  const BorderSide(color: kPrimary, width: 2),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                  color: Colors.grey.shade300, width: 1),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 18),
+
+                        // ================= PASSWORD FIELD =================
+                        TextField(
+                          controller: passController,
+                          obscureText: obscure,
+                          cursorColor: kPrimary,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: kPinkLight,
+                            hintText: "Password",
+                            prefixIcon:
+                                const Icon(Icons.lock, color: kPrimary),
+                            suffixIcon: IconButton(
+                              icon: Icon(
+                                obscure
+                                    ? Icons.visibility_off
+                                    : Icons.visibility,
+                                color: kPrimary,
+                              ),
+                              onPressed: () {
+                                setState(() {
+                                  obscure = !obscure;
+                                });
+                              },
+                            ),
+                            focusedBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide:
+                                  const BorderSide(color: kPrimary, width: 2),
+                            ),
+                            enabledBorder: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12),
+                              borderSide: BorderSide(
+                                  color: Colors.grey.shade300, width: 1),
+                            ),
+                          ),
+                        ),
+
+                        const SizedBox(height: 28),
+
+                        // ================= LOGIN BUTTON =================
+                        SizedBox(
+                          width: double.infinity,
+                          height: 52,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              gradient: kPinkPurpleGradient,
+                              borderRadius: BorderRadius.circular(15),
+                              boxShadow: [
+                                BoxShadow(
+                                  color: Colors.black.withOpacity(0.25),
+                                  blurRadius: 10,
+                                  offset: const Offset(0, 4),
+                                ),
+                              ],
+                            ),
+                            child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.transparent,
+                                shadowColor: Colors.transparent,
+                                foregroundColor: Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(15),
+                                ),
+                              ),
+                              onPressed: login,
+                              child: const Text(
+                                "Login",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                ),
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ),
         ),
       ),

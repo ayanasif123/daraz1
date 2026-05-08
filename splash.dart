@@ -1,6 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:grid/reg.dart';
+import 'package:grid/registration/reg.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -15,13 +15,12 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> _scaleAnimation;
   late Animation<Color?> _colorAnimation;
 
-  double _progress = 0.0; // Loading bar progress
+  double _progress = 0.0;
 
   @override
   void initState() {
     super.initState();
 
-    // Animation controller
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
@@ -32,29 +31,39 @@ class _SplashScreenState extends State<SplashScreen>
       CurvedAnimation(parent: _controller, curve: Curves.easeInOutBack),
     );
 
-    // Color animation (gradient effect)
+    // Color animation — dark grey → medium grey
     _colorAnimation = ColorTween(
-      begin: const Color.fromARGB(255, 3, 45, 122),
-      end: const Color.fromARGB(255, 94, 185, 228),
+      begin: const Color(0xFF1A1A1A), // Deep Black
+      end: const Color(0xFF616161),   // Medium Grey
     ).animate(
       CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
     );
 
-    // Repeat animation forever for splash effect
     _controller.repeat(reverse: true);
 
-    // Update loading bar progress
+    // Loading bar progress
     Timer.periodic(const Duration(milliseconds: 50), (timer) {
+      if (!mounted) {
+        timer.cancel();
+        return;
+      }
       setState(() {
         _progress += 0.01;
-        if (_progress >= 1.0) _progress = 1.0;
+        if (_progress >= 1.0) {
+          _progress = 1.0;
+          timer.cancel();
+        }
       });
     });
 
-    // Navigate to Login screen after 5 sec
+    // Navigate to Reg screen after 5 sec
     Timer(const Duration(seconds: 5), () {
-      Navigator.pushReplacement(
-          context, MaterialPageRoute(builder: (context) => const Reg()));
+      if (mounted) {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => const Reg()),
+        );
+      }
     });
   }
 
@@ -75,43 +84,99 @@ class _SplashScreenState extends State<SplashScreen>
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
+
+                // ================= ANIMATED LOGO =================
                 Transform.scale(
                   scale: _scaleAnimation.value,
                   child: Container(
-                    width: 100,
-                    height: 100,
+                    width: 120,
+                    height: 120,
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
                       color: Colors.white,
                       boxShadow: [
                         BoxShadow(
-                          color: Colors.white.withOpacity(0.6),
+                          color: Colors.white.withOpacity(0.3),
+                          blurRadius: 30,
+                          spreadRadius: 8,
+                        ),
+                        BoxShadow(
+                          color: Colors.black.withOpacity(0.25),
                           blurRadius: 20,
-                          spreadRadius: 5,
+                          spreadRadius: 4,
                         ),
                       ],
                     ),
-                    child: const Center(
-                      child: Text(
-                        "Daraz",
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          ShaderMask(
+                            shaderCallback: (bounds) =>
+                                const LinearGradient(
+                              colors: [Color(0xFF1A1A1A), Color(0xFF616161)],
+                              begin: Alignment.topLeft,
+                              end: Alignment.bottomRight,
+                            ).createShader(bounds),
+                            child: const Icon(
+                              Icons.storefront,
+                              size: 36,
+                              color: Colors.white,
+                            ),
+                          ),
+                          const SizedBox(height: 4),
+                          const Text(
+                            "Daraz",
+                            style: TextStyle(
+                              color: Color(0xFF1A1A1A),
+                              fontSize: 20,
+                              fontWeight: FontWeight.bold,
+                              letterSpacing: 1.2,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
                 ),
-                const SizedBox(height: 200),
-                // Loading bar
+
+                const SizedBox(height: 40),
+
+                // ================= TAGLINE =================
+                Text(
+                  "Shop Anything, Anywhere",
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.9),
+                    fontSize: 15,
+                    fontWeight: FontWeight.w500,
+                    letterSpacing: 0.8,
+                  ),
+                ),
+
+                const SizedBox(height: 120),
+
+                // ================= LOADING BAR =================
                 SizedBox(
-                  width: 150,
-                  child: LinearProgressIndicator(
-                    value: _progress,
-                    backgroundColor: Colors.white.withOpacity(0.3),
-                    valueColor:
-                        AlwaysStoppedAnimation<Color>(Colors.white),
+                  width: 180,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10),
+                    child: LinearProgressIndicator(
+                      value: _progress,
+                      minHeight: 6,
+                      backgroundColor: Colors.white.withOpacity(0.25),
+                      valueColor: const AlwaysStoppedAnimation<Color>(
+                          Colors.white),
+                    ),
+                  ),
+                ),
+
+                const SizedBox(height: 14),
+
+                Text(
+                  "Loading...",
+                  style: TextStyle(
+                    color: Colors.white.withOpacity(0.7),
+                    fontSize: 13,
                   ),
                 ),
               ],
